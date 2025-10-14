@@ -1,124 +1,110 @@
-<h1 align="center">🌳 TreeCount API</h1>
+# TreeCount API
 
-<p align="center">
-  Uma API REST em Java com Spring Boot para contagem e gerenciamento de árvores.  
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Java-11%2B-blue.svg" />
-  <img src="https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen.svg" />
-  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
-</p>
+API desenvolvida em Java 21 com Maven, para gerenciamento de contagem de árvores. Este projeto inclui testes automatizados, build com Docker e CI/CD configurado via GitHub Actions.
 
 ---
 
-## 📚 Tabela de Conteúdo
+## 📦 Pré-requisitos
 
-- [🚀 Sobre o Projeto](#-sobre-o-projeto)
-- [🛠 Tecnologias Utilizadas](#-tecnologias-utilizadas)
-- [⚙️ Configuração do Projeto](#️-configuração-do-projeto)
-- [▶️ Como Executar](#️-como-executar)
-- [🧪 Endpoints da API](#-endpoints-da-api)
-- [📦 Exemplos de Requisições](#-exemplos-de-requisições)
-- [🔐 Segurança](#-segurança)
-- [🧪 Testes](#-testes)
-- [📘 Documentação](#-documentação)
-- [🤝 Contribuindo](#-contribuindo)
-- [📄 Licença](#-licença)
-
----
-
-## 🚀 Sobre o Projeto
-
-A **TreeCount API** permite registrar, consultar e gerenciar árvores e suas contagens por região. Ideal para aplicações de monitoramento ambiental, inventário florestal e gestão urbana verde.
-
----
-
-## 🛠 Tecnologias Utilizadas
-
-- Java 11+
-- Spring Boot
-- Spring Web
-- Spring Security
-- Spring Data JPA
-- H2 (ou outro banco relacional)
-- Swagger (OpenAPI)
+- Java 21
+- Maven
 - Docker
+- GitHub account (para CI/CD e secrets)
+- Git (para clonar o projeto)
 
 ---
 
-## ⚙️ Configuração do Projeto
+## 🚀 Como executar localmente
 
-Clone o repositório:
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/arthursidor/treecount-api.git
+   cd treecount-api
+Build e teste o projeto com Maven:
 
-```bash
-git clone https://github.com/Arthur-Sidor/API_Java_TreeCount.git
-cd API_Java_TreeCount
-```
+`Copiar código`
+
+./mvnw clean package -DskipTests=false
+./mvnw test
+Build da imagem Docker:
+
+`Copiar código`
+
+docker build -t treecount-api:latest .
+Executar a aplicação com Docker:
+
+`Copiar código`
+
+docker run -d -p 8080:8080 --name treecount-api treecount-api:latest
+A API estará disponível em http://localhost:8080.
+
+🧪 Testes Automatizados
+O projeto já inclui testes existentes em src/test/java. Eles são executados automaticamente:
+
+Durante a build com:
+
+`Copiar código`
+
+./mvnw clean package -DskipTests=false
+E na etapa de testes explicitamente:
+
+`Copiar código`
+
+./mvnw test
+No pipeline CI/CD, estes testes garantem que o código está correto antes do deploy.
+
+⚙️ CI/CD com GitHub Actions
+O workflow do CI/CD está configurado em .github/workflows/ci-cd.yml.
+
+Ele executa:
+
+Checkout do código
+
+Configuração do Java 21
+
+Build do projeto
+
+Execução de testes automatizados
+
+Login no Docker Hub
+
+Build e push da imagem Docker
+
+Deploy em ambiente de staging
+
+🔑 Secrets necessários no GitHub
+DOCKER_USERNAME → arthursidor
+
+DOCKER_PASSWORD → arthur321
+
+Para adicionar: GitHub → Settings → Secrets and variables → Actions → New repository secret
+
+🐳 Docker
+Build da imagem:
+
+`Copiar código`
+
+docker build -t arthursidor/treecount-api:latest .
+Rodar o container:
+
+`Copiar código`
+
+docker run -d -p 8080:8080 --name treecount-api arthursidor/treecount-api:latest
+Parar e remover o container:
 
 
+`Copiar código`
 
-🔧 application.properties (exemplo)
-properties
+docker stop treecount-api
+docker rm treecount-api
 
-spring.datasource.url=jdbc:h2:mem:treecountdb
-spring.datasource.username=sa
-spring.datasource.password=
-spring.h2.console.enabled=true
+📁 Estrutura do Projeto
 
-jwt.secret=SEU_SEGREDO_JWT
-🐳 Docker Compose (opcional)
-
-
-docker-compose up -d
-▶️ Como Executar
-✅ Com Maven
-
-mvn spring-boot:run
-✅ Com Gradle
-
-./gradlew bootRun
-🐳 Com Docker
-
-docker build -t treecount-api .
-docker run -p 8080:8080 treecount-api
-
-
-🧪 Endpoints da API
-Método	Rota	Descrição
-GET	/api/trees	Lista todas as árvores
-GET	/api/trees/{id}	Retorna árvore por ID
-POST	/api/trees	Cria uma nova árvore
-PUT	/api/trees/{id}	Atualiza árvore existente
-DELETE	/api/trees/{id}	Remove árvore
-GET	/api/counts	Lista contagens de árvores
-POST	/api/counts	Cria/atualiza contagem
-
-📦 Exemplos de Requisições
-📌 Criar uma árvore
-
-curl -X POST http://localhost:8080/api/trees \
--H "Content-Type: application/json" \
--d '{"species":"Ipê Amarelo","latitude":-23.55,"longitude":-46.63,"plantingDate":"2023-03-20","height":4.2}'
-📌 Registrar contagem
-
-curl -X POST http://localhost:8080/api/counts \
--H "Content-Type: application/json" \
--d '{"treeId":1,"region":"Zona Sul","count":12,"date":"2025-07-19"}'
-
-🔐 Segurança
-Autenticação via JWT (ou outra estratégia configurada)
-
-Configure o jwt.secret no application.properties
-
-Proteção de endpoints sensíveis com Spring Security
-
-🧪 Testes
-Execute testes automatizados com:
-
-mvn test
-ou
-
-./gradlew test
-📘 Documentação
-Acesse: http://localhost:8080/swagger-ui.html
+treecount-api/
+│
+├─ src/main/java/      # Código fonte
+├─ src/test/java/      # Testes automatizados
+├─ Dockerfile          # Configuração do container
+├─ .github/workflows/  # CI/CD
+├─ mvnw, mvnw.cmd      # Wrapper Maven
+└─ pom.xml             # Configuração Maven
