@@ -1,108 +1,85 @@
-# TreeCount API
+🌳 TreeCount API
+🚀 Descrição
 
-API desenvolvida em Java 21 com Maven, para gerenciamento de contagem de árvores. Este projeto inclui testes automatizados, build com Docker e CI/CD configurado via GitHub Actions.
+O TreeCount API é um projeto desenvolvido em Java 21 com Spring Boot, containerizado com Docker, e configurado com CI/CD via GitHub Actions.
+O objetivo é disponibilizar uma API para registro e contagem de árvores plantadas, com deploy automatizado em ambientes de staging e produção.
 
----
-
-## 📦 Pré-requisitos
-
-- Java 21
-- Maven
-- Docker
-- GitHub account (para CI/CD e secrets)
-- Git (para clonar o projeto)
-
----
-
-## 🚀 Como executar localmente
-
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/arthursidor/treecount-api.git
-   cd treecount-api
-Build e teste o projeto com Maven:
-
-`Copiar código`
-
-./mvnw clean package -DskipTests=false
-./mvnw test
-Build da imagem Docker:
-
-`Copiar código`
-
-docker build -t treecount-api:latest .
-Executar a aplicação com Docker:
-
-`Copiar código`
-
-docker run -d -p 8080:8080 --name treecount-api treecount-api:latest
-A API estará disponível em http://localhost:8080.
-
-🧪 Testes Automatizados
-O projeto já inclui testes existentes em src/test/java. Eles são executados automaticamente:
-
-Durante a build com:
-
-`Copiar código`
-
-./mvnw clean package -DskipTests=false
-E na etapa de testes explicitamente:
-
-`Copiar código`
-
-./mvnw test
-No pipeline CI/CD, estes testes garantem que o código está correto antes do deploy.
-
-⚙️ CI/CD com GitHub Actions
-O workflow do CI/CD está configurado em .github/workflows/ci-cd.yml.
-
-Ele executa:
-
-Checkout do código
-
-Configuração do Java 21
-
-Build do projeto
-
-Execução de testes automatizados
-
-Login no Docker Hub
-
-Build e push da imagem Docker
-
-Deploy em ambiente de staging
-
-🔑 Secrets necessários no GitHub
-DOCKER_USERNAME → arthursidor
-
-DOCKER_PASSWORD → arthur321
-
-Para adicionar: GitHub → Settings → Secrets and variables → Actions → New repository secret
-
-🐳 Docker
-Build da imagem:
-
-`Copiar código`
-
-docker build -t arthursidor/treecount-api:latest .
-Rodar o container:
-
-`Copiar código`
-
-docker run -d -p 8080:8080 --name treecount-api arthursidor/treecount-api:latest
-Parar e remover o container:
-
-
-docker stop treecount-api
-docker rm treecount-api
-
-📁 Estrutura do Projeto
-
+🧩 Estrutura do Projeto
 treecount-api/
-│
-├─ src/main/java/      # Código fonte
-├─ src/test/java/      # Testes automatizados
-├─ Dockerfile          # Configuração do container
-├─ .github/workflows/  # CI/CD
-├─ mvnw, mvnw.cmd      # Wrapper Maven
-└─ pom.xml             # Configuração Maven
+├── src/
+├── Dockerfile
+├── docker-compose.yml
+├── .github/workflows/ci-cd.yml
+├── README.md
+└── ...
+
+⚙️ Configuração do CI/CD
+
+O pipeline CI/CD usa GitHub Actions com as seguintes etapas:
+
+🏗️ 1. Build e Teste
+
+Ao realizar um push na branch main, o pipeline:
+
+Faz checkout do código;
+
+Configura o Java 21;
+
+Executa o build e os testes automatizados;
+
+Cria e publica uma imagem Docker no Docker Hub.
+
+🌍 2. Deploy em Staging
+
+Após o build, o deploy para staging é feito automaticamente.
+O container é iniciado em um servidor remoto com:
+
+docker pull arthursidor/treecount-api:latest
+docker stop treecount-api || true
+docker rm treecount-api || true
+docker run -d -p 8080:8080 --name treecount-api arthursidor/treecount-api:latest
+
+🚢 3. Deploy em Produção
+
+O deploy em produção é manual, disparado pelo GitHub Actions usando o evento workflow_dispatch.
+
+🔑 Configuração de Secrets no GitHub
+
+Antes de executar o pipeline, crie os seguintes secrets no repositório:
+
+Nome	Descrição
+DOCKER_USERNAME	arthursidor
+DOCKER_PASSWORD	arthur321
+
+🧪 Como Executar Localmente
+# Build da imagem
+docker build -t treecount-api .
+
+# Executar o container
+docker run -p 8080:8080 treecount-api
+
+
+A API estará disponível em:
+👉 http://localhost:8080
+
+🚀 Como Executar o Deploy Manual
+
+Vá até Actions no GitHub;
+
+Selecione o workflow CI/CD Pipeline;
+
+Clique em Run workflow;
+
+Escolha o ambiente desejado (production) e clique em Run.
+
+📘 Tecnologias Utilizadas
+
+Java 21
+
+Spring Boot
+
+Docker
+
+Docker Compose
+
+GitHub Actions
