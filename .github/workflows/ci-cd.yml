@@ -21,7 +21,7 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      # Passo 3: garantir que mvnw é executável (resolve erro de permission denied)
+      # Passo 3: garantir que mvnw é executável (resolve erro de permission deniedd)
       - name: Tornar mvnw executável
         run: chmod +x ./mvnw
 

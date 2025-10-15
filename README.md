@@ -93,8 +93,6 @@ docker run -d -p 8080:8080 --name treecount-api arthursidor/treecount-api:latest
 Parar e remover o container:
 
 
-`Copiar código`
-
 docker stop treecount-api
 docker rm treecount-api
 
