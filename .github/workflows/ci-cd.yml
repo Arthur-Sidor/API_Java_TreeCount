@@ -10,34 +10,45 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Passo 1: pegar o código do repositório
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Passo 2: configurar o Java 21
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: '21'
 
+      # Passo 3: garantir que mvnw é executável (resolve erro de permission denied)
+      - name: Tornar mvnw executável
+        run: chmod +x ./mvnw
+
+      # Passo 4: build do projeto
       - name: Build project
         run: ./mvnw clean package -DskipTests=false
 
+      # Passo 5: rodar testes
       - name: Run tests
         run: ./mvnw test
 
+      # Passo 6: login no Docker Hub
       - name: Log in to Docker
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      # Passo 7: build da imagem Docker
       - name: Build Docker image
         run: docker build -t arthursidor/treecount-api:latest .
 
+      # Passo 8: enviar imagem para Docker Hub
       - name: Push Docker image
         run: docker push arthursidor/treecount-api:latest
 
-      # Exemplo simples de deploy
+      # Passo 9: deploy simples para staging
       - name: Deploy (Staging)
         run: |
           docker pull arthursidor/treecount-api:latest
